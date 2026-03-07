@@ -3,20 +3,24 @@ package com.souemilio.meuprojeto.business;
 import com.souemilio.meuprojeto.infrastructure.entity.Usuario;
 import com.souemilio.meuprojeto.infrastructure.exceptions.ConflictException;
 import com.souemilio.meuprojeto.infrastructure.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario salvaUsuario(Usuario usuario) {
         try{
             emailExiste(usuario.getEmail());
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
             return usuarioRepository.save(usuario);
         }catch (ConflictException e) {
             throw new ConflictException("Email já cadastrado", e.getCause());
@@ -35,7 +39,7 @@ public class UsuarioService {
         }
     }
 
-    public boolean verificaEmailExistente(String email) {
+    public Boolean verificaEmailExistente(String email) {
         return usuarioRepository.existsByEmail(email);
     }
 
