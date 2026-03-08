@@ -4,8 +4,6 @@ import com.souemilio.meuprojeto.business.UsuarioService;
 import com.souemilio.meuprojeto.controller.dtos.UsuarioDTO;
 import com.souemilio.meuprojeto.infrastructure.entity.Usuario;
 import com.souemilio.meuprojeto.infrastructure.security.JwtUtil;
-import org.hibernate.query.criteria.JpaConflictUpdateAction;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
