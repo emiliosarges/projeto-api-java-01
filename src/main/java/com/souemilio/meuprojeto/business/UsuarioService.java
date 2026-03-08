@@ -2,6 +2,7 @@ package com.souemilio.meuprojeto.business;
 
 import com.souemilio.meuprojeto.infrastructure.entity.Usuario;
 import com.souemilio.meuprojeto.infrastructure.exceptions.ConflictException;
+import com.souemilio.meuprojeto.infrastructure.exceptions.ResourceNotFoundException;
 import com.souemilio.meuprojeto.infrastructure.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,16 @@ public class UsuarioService {
 
     public Boolean verificaEmailExistente(String email) {
         return usuarioRepository.existsByEmail(email);
+    }
+
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("Usuário não encontrado")
+        );
+    }
+
+    public void deletaUsuarioPorEmail(String email) {
+        usuarioRepository.deleteByEmail(email);
     }
 
 }

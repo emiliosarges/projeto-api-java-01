@@ -4,6 +4,8 @@ import com.souemilio.meuprojeto.business.UsuarioService;
 import com.souemilio.meuprojeto.controller.dtos.UsuarioDTO;
 import com.souemilio.meuprojeto.infrastructure.entity.Usuario;
 import com.souemilio.meuprojeto.infrastructure.security.JwtUtil;
+import org.hibernate.query.criteria.JpaConflictUpdateAction;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +19,9 @@ public class UsuarioController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public UsuarioController(UsuarioService usuarioService, AuthenticationManager authenticationManager, JwtUtil jwtUtil){
+    public UsuarioController(UsuarioService usuarioService,
+                             AuthenticationManager authenticationManager,
+                             JwtUtil jwtUtil){
         this.usuarioService = usuarioService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -37,4 +41,16 @@ public class UsuarioController {
         );
         return "Bearer " + jwtUtil.generateToken(authentication.getName());
     }
+
+    @GetMapping
+    public ResponseEntity<Usuario> buscaUsuarioPorEmail(@RequestParam("email") String email) {
+        return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
+    }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Void> deletaUsuarioPorEmail(@PathVariable String email) {
+       usuarioService.deletaUsuarioPorEmail(email);
+       return ResponseEntity.ok().build();
+    }
+
 }
